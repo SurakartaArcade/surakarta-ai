@@ -5,18 +5,19 @@ module.exports = {
     mocha: true
   },
   extends: [
-    'standard'
+    'plugin:@typescript-eslint/recommended',
+    'plugin:jsdoc/recommended'
   ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
   },
-  parser: "babel-eslint",
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module'
   },
   rules: {
-      indent: ["error", 4]
+    indent: ["error", 4]
   }
 }
