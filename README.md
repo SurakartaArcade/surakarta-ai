@@ -1,4 +1,4 @@
-# Surakarta AI - Negamax Computer Engine
+# Surakarta AI - Negamax Computer Engine (Web)
 
 The aim of this project is to provide a high-performance computer engine for the Surakarta game. It uses the Negamax algorithm
 with the following optimizations:
