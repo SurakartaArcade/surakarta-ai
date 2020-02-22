@@ -1,9 +1,9 @@
 import { Surakarta } from "surakarta";
-import { suggestPlay } from "../src/SurakartaEngine";
+import { suggestPlay } from "../src";
 import { expect } from "chai";
 import "mocha";
 
-describe("SurakartaEngine", function() {
+describe("suggestPlay()", function() {
   const mockSurakarta = new Surakarta();
 
   it("Executes without throwing an errors", function() {

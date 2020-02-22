@@ -6,7 +6,8 @@ module.exports = {
   },
   extends: [
     'plugin:@typescript-eslint/recommended',
-    'plugin:jsdoc/recommended'
+    'plugin:jsdoc/recommended',
+    "plugin:prettier/recommended"
   ],
   globals: {
     Atomics: 'readonly',
@@ -17,7 +18,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module'
   },
-  rules: {
-    indent: ["error", 4]
-  }
+  plugins: [
+    'prettier'
+  ]
 }
