@@ -2,12 +2,12 @@
   "name": "surakarta-ai",
   "version": "1.0.0",
   "description": "",
-  "main": "output/index.js",
+  "module": "bundles/index.js",
   "scripts": {
     "benchmark": "ts-node ./benchmark/search -T",
-    "build": "rollup -c && npm link",
-    "test": "npm run build && mocha -r ts-node/register test/**/*.test.ts",
-    "prepublishOnly": "npm run test",
+    "build": "rm -rf ./bundles && rollup -c && npm link",
+    "test": "mocha -r ts-node/register test/**/*.test.ts",
+    "prepublishOnly": "npm run build && npm run test",
     "lint": "eslint . --ext .ts,.tsx",
     "link-local-deps": "npm link surakarta surakarta-analysis"
   },
@@ -65,6 +65,7 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
+    "observable-fns": "^0.5.1",
     "threads": "^1.2.0"
   }
 }

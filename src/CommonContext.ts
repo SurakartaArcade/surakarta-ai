@@ -12,4 +12,8 @@ export class CommonContext {
       this.cache = new TranspositionTable({ nodeLimit: 9000 });
     }
   }
+
+  static postThreadBoundary(context: CommonContext): CommonContext {
+    return new CommonContext();
+  }
 }

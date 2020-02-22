@@ -50,6 +50,25 @@ export class SearchContext {
   destroy(): void {
     negamaxContextPool.push(this);
   }
+
+  static postThreadBoundary(context): SearchContext {
+    const newContext = new SearchContext();
+    newContext.surakarta = context.surakarta;
+    newContext.playerId = context.playerId;
+    newContext.depthLimit = context.depthLimit;
+    newContext.searchDepth = context.searchDepth;
+    newContext.alpha = context.alpha;
+    newContext.beta = context.beta;
+
+    const { states, turn } = context.surakarta;
+
+    newContext.surakarta = SK.Surakarta.fromState(states);
+    newContext.surakarta.turn = turn;
+
+    newContext.common = CommonContext.postThreadBoundary(context.common);
+
+    return newContext;
+  }
 }
 
 interface SearchOptions {
