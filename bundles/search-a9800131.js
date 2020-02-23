@@ -1,4 +1,4 @@
-import { BLACK_PLAYER, RED_PLAYER, NOT_FILLED, Position, Surakarta } from 'surakarta';
+import { Surakarta, NOT_FILLED, BLACK_PLAYER, RED_PLAYER, Position } from 'surakarta';
 import { Finder, evaluate } from 'surakarta-analysis';
 import { performance } from 'perf_hooks';
 
@@ -95,12 +95,16 @@ var TranspositionTable = (function () {
 }());
 
 var CommonContext = (function () {
-    function CommonContext(noCache) {
+    function CommonContext(noCache, requestHandle) {
         if (noCache === void 0) { noCache = false; }
         if (!noCache) {
             this.cache = new TranspositionTable({ nodeLimit: 9000 });
         }
+        this.requestHandle = requestHandle || Math.random() * (1 << 30);
     }
+    CommonContext.postThreadBoundary = function (context) {
+        return new CommonContext(!!context.cache, context.requestHandle);
+    };
     return CommonContext;
 }());
 
@@ -126,6 +130,20 @@ var SearchContext = (function () {
     };
     SearchContext.prototype.destroy = function () {
         negamaxContextPool.push(this);
+    };
+    SearchContext.postThreadBoundary = function (context) {
+        var newContext = new SearchContext();
+        newContext.surakarta = context.surakarta;
+        newContext.playerId = context.playerId;
+        newContext.depthLimit = context.depthLimit;
+        newContext.searchDepth = context.searchDepth;
+        newContext.alpha = context.alpha;
+        newContext.beta = context.beta;
+        var _a = context.surakarta, states = _a.states, turn = _a.turn;
+        newContext.surakarta = Surakarta.fromState(states);
+        newContext.surakarta.turn = turn;
+        newContext.common = CommonContext.postThreadBoundary(context.common);
+        return newContext;
     };
     return SearchContext;
 }());
@@ -222,4 +240,4 @@ function search(context) {
     return bestValue;
 }
 
-export { createContext as c, search as s };
+export { SearchContext as S, createContext as c, search as s };

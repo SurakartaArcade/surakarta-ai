@@ -1,6 +1,6 @@
-import { Move } from 'surakarta';
+import 'surakarta';
 import 'surakarta-analysis';
-import { s as search, c as createContext } from './search-3ada05aa.js';
+import { s as search, c as createContext } from './search-a9800131.js';
 import 'perf_hooks';
 import { Thread, spawn, Worker } from 'threads';
 
@@ -56,38 +56,43 @@ function __generator(thisArg, body) {
     }
 }
 
+var WorkerPortal = {
+    _zygoteThread: null,
+    zygoteThread: function () {
+        if (!this._zygoteThread) {
+            this._zygoteThread = spawn(new Worker("./ZygoteThread.js"));
+        }
+        return this._zygoteThread;
+    }
+};
 function suggestPlay(surakarta) {
     return search(createContext(surakarta));
 }
 function play(surakarta) {
-    return __awaiter(this, void 0, Move, function () {
-        var zygote, test, result;
+    return __awaiter(this, void 0, void 0, function () {
+        var zygote, result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    console.log("here");
-                    return [4, spawn(new Worker("./parallel/ZygoteThread.worker.ts"))];
+                case 0: return [4, WorkerPortal.zygoteThread()];
                 case 1:
                     zygote = _a.sent();
-                    return [4, zygote.test()];
-                case 2:
-                    test = _a.sent();
-                    console.log(test + " <-");
-                    console.log("hey");
                     return [4, zygote.exec(createContext(surakarta))];
-                case 3:
+                case 2:
                     result = _a.sent();
-                    return [4, Thread.terminate(zygote)];
-                case 4:
-                    _a.sent();
-                    return [2, test];
+                    return [2, result];
             }
         });
     });
+}
+function resetResources() {
+    if (WorkerPortal._zygoteThread) {
+        Thread.terminate(WorkerPortal._zygoteThread);
+        WorkerPortal._zygoteThread = null;
+    }
 }
 var index = {
     suggestPlay: suggestPlay
 };
 
 export default index;
-export { play, suggestPlay };
+export { play, resetResources, suggestPlay };

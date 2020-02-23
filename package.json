@@ -36,7 +36,6 @@
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-private-methods": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
-    "@rollup/plugin-typescript": "^3.0.0",
     "@types/chai": "^4.2.9",
     "@types/mocha": "^7.0.1",
     "@typescript-eslint/eslint-plugin": "^2.20.0",
@@ -65,6 +64,7 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
+    "@rollup/plugin-replace": "^2.3.1",
     "observable-fns": "^0.5.1",
     "threads": "^1.2.0"
   }

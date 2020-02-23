@@ -1,5 +1,5 @@
 import { Surakarta, Move } from "surakarta";
-import { suggestPlay, play } from "../src";
+import { suggestPlay, play, resetResources } from "../src";
 import { expect } from "chai";
 import "mocha";
 
@@ -12,8 +12,16 @@ describe("suggestPlay()", function() {
   });
 
   it("play() runs", function() {
-    play(mockSurakarta).then(result => {
-      expect(result.srcRow).to.be.a("number");
-    });
+    return play(mockSurakarta)
+      .then(result => {
+        expect(result.srcRow).to.be.a("number");
+      })
+      .catch(e => {
+        throw e;
+      });
+  });
+
+  after(function() {
+    resetResources();
   });
 });

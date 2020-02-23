@@ -3,28 +3,78 @@ import { expose } from "threads/worker";
 import { Subject, Observable } from "threads/observable";
 import { search } from "../search";
 import * as SK from "surakarta";
-import { performance } from "perf_hooks";
 
-let depth: Subject<number>;
-let progress: Subject<number>;
+// Each exec() call to ZygoteThread will have an active ZygoteRequest
+// parallel to it.
+class ZygoteRequest {
+  id: number;
+
+  depth: Subject<number>;
+  progress: Subject<number>;
+
+  static requestPool: ZygoteRequest[] = [];
+  static requestMap = {};
+
+  constructor() {
+    this.id = -1;
+    this.depth = null;
+    this.progress = null;
+  }
+
+  init(id: number): ZygoteRequest {
+    if (ZygoteRequest.requestMap[id]) {
+      throw new Error(
+        "Cannot initate ZygoteRequest due to request-handle collision"
+      );
+    }
+
+    this.id = id;
+    this.depth = new Subject();
+    this.progress = new Subject();
+
+    ZygoteRequest.requestMap[id] = this;
+
+    return this;
+  }
+
+  destroy(): void {
+    ZygoteRequest.requestMap[this.id] = null;
+    ZygoteRequest.requestPool.push(this);
+  }
+
+  static init(context: SearchContext): ZygoteRequest {
+    return (ZygoteRequest.requestPool.pop() || new ZygoteRequest()).init(
+      context.common.requestHandle
+    );
+  }
+}
+
+const acceptRequests = true;
 
 const zygoteTemplate = {
+  /**
+   * Runs the negamax search for an optimal move on a zygote thread. To access
+   * runtime information, save the {@code requestHandle} at from
+   * {@code context.common.requestHandle}.
+   *
+   * @param {SearchContext} context - initiation context
+   * @returns {SK.Move} optimal move
+   */
   exec(context: SearchContext): SK.Move {
-    context = SearchContext.postThreadBoundary(context);
-    depth = new Subject();
-    progress = new Subject();
+    if (!acceptRequests) {
+      throw new Error("ZygoteThread is now dormant.");
+    }
 
-    const result = search(context);
-    return result;
+    context = SearchContext.postThreadBoundary(context);
+    ZygoteRequest.init(context);
+
+    return search(context);
   },
-  depth(): Observable<number> {
-    return Observable.from(depth);
+  depth(requestHandle: number): Observable<number> {
+    return Observable.from(ZygoteRequest.requestMap[requestHandle]?.depth);
   },
-  progress(): Observable<number> {
-    return Observable.from(progress);
-  },
-  test(): number {
-    return 234;
+  progress(requestHandle: number): Observable<number> {
+    return Observable.from(ZygoteRequest.requestMap[requestHandle]?.progress);
   }
 };
 
