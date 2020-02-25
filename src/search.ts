@@ -1,37 +1,42 @@
 import * as SK from "surakarta";
-import { Finder, PebbleMoves, evaluate as heuristic } from "surakarta-analysis";
+import {
+  Finder,
+  PebbleMoves,
+  evaluate as heuristic,
+  Indexer,
+  MoveHelper
+} from "surakarta-analysis";
 import { createInheritedContext, SearchContext } from "./SearchContext";
 import { hash } from "./mem";
 
+const { inflateHandle } = MoveHelper;
+
+// Simple wrapper around the Indexer's index-buffer that inflates the
+// move-handles in a forEach loop.
 class Aggregate {
-  arr: PebbleMoves[];
+  indexed: number[];
 
   constructor() {
-    this.arr = [];
+    this.indexed = [];
   }
 
-  push(moves: PebbleMoves): void {
-    this.arr.push(moves);
+  get length() {
+    return this.indexed.length;
   }
 
-  forEach(callback: any): void {
-    this.arr.forEach(moves => moves.forEach(callback));
+  forEach(callback: Function): void {
+    const moveTarget = new SK.Move();
+
+    this.indexed.forEach(moveHandle => {
+      callback(inflateHandle(moveHandle, moveTarget));
+    });
   }
 
   static from(context: SearchContext): Aggregate {
-    const { surakarta, playerId } = context;
+    const { surakarta } = context;
     const movesArray = new Aggregate();
 
-    for (let i = 0; i < 36; i++) {
-      if (surakarta.states[i] === playerId) {
-        movesArray.push(
-          Finder.exploreAll(
-            surakarta,
-            new SK.Position(Math.floor(i / 6), i % 6)
-          )
-        );
-      }
-    }
+    Indexer.index(surakarta, movesArray.indexed);
 
     return movesArray;
   }
@@ -70,8 +75,6 @@ export function search(context: SearchContext): SK.Move | number {
   let bestValue = Number.NEGATIVE_INFINITY;
 
   let stopped = false;
-  let counter = 0;
-
   movesIterable.forEach((move: SK.Move) => {
     if (stopped) {
       return;
