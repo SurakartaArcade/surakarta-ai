@@ -20,7 +20,7 @@ class Aggregate {
     this.indexed = [];
   }
 
-  get length() {
+  get length(): number {
     return this.indexed.length;
   }
 
@@ -107,7 +107,6 @@ export function search(context: SearchContext): SK.Move | number {
 
     childState.copyFrom(surakarta);
     --childState.turn;
-    ++counter;
   });
 
   if (searchDepth === 0) {
