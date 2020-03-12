@@ -1,6 +1,7 @@
 import { TTEntry, TranspositionTable } from "../src/mem/TranspositionTable";
 import { expect } from "chai";
 import "mocha";
+import "./globalPerformance";
 
 describe("TranspositionTable", function() {
   it("Reads back a written node", function() {

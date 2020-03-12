@@ -1,11 +1,11 @@
 import * as SK from "surakarta";
 import { CommonContext } from "./CommonContext";
-import { search } from "./search";
-
-const negamaxContextPool = [];
+import Pool from "opool";
 
 /**
- * Pooled object used for recursive communication in the negamax algorithm.
+ * A `SearchContext` is the state of a negamax search. It is auto-created by `suggestPlay`.
+ *
+ * @class
  */
 export class SearchContext {
   surakarta: SK.Surakarta;
@@ -19,6 +19,12 @@ export class SearchContext {
   common: CommonContext;
 
   constructor() {
+    /**
+     * A <code>Surakarta</code> state reached after <code>searchDepth</code> moves have
+     * been played. This the state being actively searched for an optimal move.
+     *
+     * @member {SK.Surakarta}
+     */
     this.surakarta = null;
     this.playerId = SK.NOT_FILLED;
 
@@ -47,8 +53,18 @@ export class SearchContext {
     this.beta = Number.POSITIVE_INFINITY;
   }
 
+  reset(): void {
+    this.surakarta = null;
+    this.playerId = 0;
+    this.depthLimit = 0;
+    this.searchDepth = 0;
+
+    this.alpha = Number.NEGATIVE_INFINITY;
+    this.beta = Number.POSITIVE_INFINITY;
+  }
+
   destroy(): void {
-    negamaxContextPool.push(this);
+    SearchContext.pool.release(this);
   }
 
   static postThreadBoundary(context): SearchContext {
@@ -69,6 +85,8 @@ export class SearchContext {
 
     return newContext;
   }
+
+  static pool = new Pool(SearchContext);
 }
 
 interface SearchOptions {
@@ -84,7 +102,7 @@ export function createContext(
   surakarta: SK.Surakarta,
   searchOptions: SearchOptions = { noCache: false }
 ): SearchContext {
-  const context = negamaxContextPool.pop() || new SearchContext();
+  const context = SearchContext.pool.get();
 
   context.init(surakarta, surakarta.turnPlayer, 4);
 
@@ -102,7 +120,7 @@ export function createInheritedContext(
   surakarta: SK.Surakarta,
   parent: SearchContext
 ): SearchContext {
-  const context = negamaxContextPool.pop() || new SearchContext();
+  const context = SearchContext.pool.get();
 
   context.surakarta = surakarta;
   context.playerId =

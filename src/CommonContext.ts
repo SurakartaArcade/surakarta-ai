@@ -1,10 +1,7 @@
 import { TranspositionTable } from "./mem";
 
 /**
- * The common context is the static part of the search context. It is shared
- * by all branches of the search tree.
- *
- * @class
+ * @namespace SK.ai
  */
 export class CommonContext {
   requestHandle: number;

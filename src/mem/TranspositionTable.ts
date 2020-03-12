@@ -1,6 +1,5 @@
 import * as SK from "surakarta";
 import { HashCode, initZobrist, hash } from "./ZobristHasher";
-import { performance } from "perf_hooks";
 
 interface TableOptions {
   nodeLimit: number;

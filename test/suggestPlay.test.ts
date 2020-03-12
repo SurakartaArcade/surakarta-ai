@@ -2,6 +2,7 @@ import { Surakarta, Move } from "surakarta";
 import { suggestPlay, play, resetResources } from "../src";
 import { expect } from "chai";
 import "mocha";
+import "./globalPerformance";
 
 describe("suggestPlay()", function() {
   const mockSurakarta = new Surakarta();

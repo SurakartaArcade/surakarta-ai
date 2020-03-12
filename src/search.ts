@@ -1,10 +1,9 @@
 import * as SK from "surakarta";
 import {
-  Finder,
-  PebbleMoves,
   evaluate as heuristic,
   Indexer,
-  MoveHelper
+  MoveHelper,
+  sortIndex
 } from "surakarta-analysis";
 import { createInheritedContext, SearchContext } from "./SearchContext";
 import { hash } from "./mem";
@@ -37,6 +36,7 @@ class Aggregate {
     const movesArray = new Aggregate();
 
     Indexer.index(surakarta, movesArray.indexed);
+    sortIndex(surakarta, movesArray.indexed);
 
     return movesArray;
   }

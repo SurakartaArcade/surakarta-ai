@@ -2,7 +2,7 @@ import { Surakarta } from "surakarta";
 import { initZobrist, hash } from "../src/mem/ZobristHasher";
 import { expect } from "chai";
 import "mocha";
-import { performance } from "perf_hooks";
+import "./globalPerformance";
 
 describe("ZobristHasher", function() {
   initZobrist();

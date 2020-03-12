@@ -15,6 +15,8 @@ export default {
   plugins: [
     replace({
       [`new Worker("./parallel/ZygoteThread.worker.ts")`]: `new Worker("./ZygoteThread.js")`,
+      [`import { performance } from 'perf_hooks';`]: "",
+      [`import 'perf_hooks';`]: "",
       delimiters: ["", ""]
     }),
     peerDepsExternal(),
