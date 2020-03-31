@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/SurakartaArcade/Surakarta/_apis/build/status/SurakartaArcade.surakarta-ai?branchName=master)](https://dev.azure.com/SurakartaArcade/Surakarta/_build/latest?definitionId=2&branchName=master)
+
 # Surakarta AI - Negamax Computer Engine (Web)
 
 The aim of this project is to provide a high-performance computer engine for the Surakarta game. It uses the Negamax algorithm
