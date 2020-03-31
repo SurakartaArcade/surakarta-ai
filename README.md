@@ -10,7 +10,7 @@ with the following optimizations:
 |------------------------------------------|--------------------|
 | Alpha/beta pruning                       | :white_check_mark: |
 | Transposition Table                      | :white_check_mark: |
-| Parallelization (workers)                | In-Progress        |
+| Parallelization (workers)                | :x: (help required)|
 | Iterative deepening depth-first search   | In-Progress        |
 
 ## Benchmarks
