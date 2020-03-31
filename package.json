@@ -7,6 +7,7 @@
     "benchmark": "ts-node ./benchmark/search -T",
     "build": "rm -rf ./dist/* && webpack && npm link",
     "test": "mocha -r ts-node/register test/**/*.test.ts",
+    "unit-test": "mocha -r ts-node/register test/**/*.test.ts --reporter mocha-junit-reporter",
     "prepublishOnly": "npm run build && npm run test",
     "lint": "eslint . --ext .ts,.tsx",
     "link-local-deps": "npm link surakarta surakarta-analysis"
@@ -54,6 +55,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "mocha": "^7.0.1",
+    "mocha-junit-reporter": "^1.23.3",
     "mocha-typescript": "^1.1.17",
     "null-loader": "^3.0.0",
     "prettier": "^1.19.1",
