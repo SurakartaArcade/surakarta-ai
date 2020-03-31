@@ -15,3 +15,9 @@ steps:
     npm run build
     npm run unit-test
   displayName: 'Install, Build, & Test'
+
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testResultsFormat: JUnit
+    testResultsFiles: '**/test-results.xml'
