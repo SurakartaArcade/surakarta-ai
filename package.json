@@ -54,7 +54,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "mocha": "^7.0.1",
+    "mocha": "^10.2.0",
     "mocha-junit-reporter": "^1.23.3",
     "mocha-typescript": "^1.1.17",
     "null-loader": "^3.0.0",
